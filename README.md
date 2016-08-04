@@ -1,3 +1,6 @@
+
+Q1,2,6,7 can be found in the code on main.js
+
 Q3: Do you observe anything weird in timestamps?
 
 Yes, starting from line 184723 till the end of the file, the timestamp is ubsent in the json. 
