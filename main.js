@@ -17,29 +17,29 @@ var product = process.argv[3];
 
 if(logFilePath && logFilePath!='-h')
 {
-	if(product)
-	{
-		worker.countLanches(logFilePath,product,function(launches){
-			console.log("Total Launches: "+ launches);
-		});
+    if(product)
+    {
+        worker.countLanches(logFilePath,product,function(launches){
+            console.log("Total Launches: "+ launches);
+        });
 
-		worker.countFirstLaunches(logFilePath,product,function(firstTimeLaunches){
-			console.log("First Time Launches: "+ firstTimeLaunches);
-		});
-	}
+        worker.countFirstLaunches(logFilePath,product,function(firstTimeLaunches){
+            console.log("First Time Launches: "+ firstTimeLaunches);
+        });
+    }
 
-	worker.getBestMaintenanceTime(logFilePath,function(date){
-		console.log("Best time to do maintenance is on a "+date.day+" at "+
-			date.hour+":00 with average load of "+ parseInt(date.mini/3)+" events");
-	});
+    worker.getBestMaintenanceTime(logFilePath,function(date){
+        console.log("Best time to do maintenance is on a "+date.day+" at "+
+            date.hour+":00 with average load of "+ parseInt(date.mini/3)+" events");
+    });
 
-	worker.findLongestActivityDevice(logFilePath,function(data){
-		console.log("Longest Activity Device: "+data.device+
-			" with active time of "+data.time+" milliseconds");
-	});
+    worker.findLongestActivityDevice(logFilePath,function(data){
+        console.log("Longest Activity Device: "+data.device+
+            " with active time of "+data.time+" milliseconds");
+    });
 }
 else
-	console.log("usage: ./main.js 'path_to_log_file' ['product_name']");
+    console.log("usage: ./main.js 'path_to_log_file' ['product_name']");
 
 
 
