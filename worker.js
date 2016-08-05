@@ -146,7 +146,7 @@ var Worker = {
 		// from end to begining saving the first occurence of every
 		// device. Subtract the start time and end time of every 
 		// device and return the device id with tha biggest diffrence
-		// which is the longest active time.
+		// which is the longest active time of all devices.
 
 		var devices = [];
 		var startTimes = [];
