@@ -49,10 +49,10 @@ var Worker = {
             filePath,'--raw-output']);
 
         // Note: We will pipeline the jq process with awk '!s[$0]++' which
-        // will remove duplicate events (Q3. I have asumed that duplicates should 
-        // not be included in the calculation. If a measure of the duplicate
-        // rate frequency is required in this assignment check the duplicate.js
-        // file.
+        // will remove duplicate events (Q3). I have asumed that duplicates should 
+        // not be included in while counting the launches. If a measure of the duplicate
+        // rate frequency is required in this assignment we can apply awk "x[$0]++>=1"
+        // and count them.
 
         var launches = 0;
         console.log("calculating total launches...");
