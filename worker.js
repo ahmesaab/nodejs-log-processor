@@ -6,12 +6,12 @@ var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturda
 
 var Worker = {
 
-	countFirstLaunches:function(product,callback)
+	countFirstLaunches:function(filePath,product,callback)
 	{
 		// Spawn jq proccess that will filter the file by product name and type
 		var jq = spawn('jq',['{type,source,device_id: .device.device_id}| \
 			select(.type == "launch")|select(.source=="'+product+'")|tostring',
-			'obfuscated_data','--raw-output']);
+			filePath,'--raw-output']);
 
 		var launches = 0;
 		console.log("calculating first time launches...");
@@ -40,13 +40,13 @@ var Worker = {
 			callback(launches);	
 		});
 	},
-	countLanches:function(product,callback)
+	countLanches:function(filePath,product,callback)
 	{
 
 		// Spawn jq proccess that will filter the file by product name and type
 		var jq = spawn('jq',['{event_id,type,source}| \
 			select(.type == "launch")|select(.source=="'+product+'")|tostring',
-			'obfuscated_data','--raw-output']);
+			filePath,'--raw-output']);
 
 		// Note: We will pipeline the jq process with awk '!s[$0]++' which
 		// will remove duplicate events (Q3. I have asumed that duplicates should 
@@ -82,11 +82,11 @@ var Worker = {
 			callback(launches);	
 		});
 	},
-	getBestMaintenanceTime:function(callback)
+	getBestMaintenanceTime:function(filePath,callback)
 	{
 
 		// Spawn jq proccess that will be used in calculating best maintenance time
-		var jq = spawn('jq',['{time}|tostring','obfuscated_data','--raw-output']);
+		var jq = spawn('jq',['{time}|tostring',filePath,'--raw-output']);
 
 		// data is a 2D array that will contain the counts
 		// of events for every day of the week for every hour
@@ -139,8 +139,15 @@ var Worker = {
 		});
 		
 	},
-	findLongestActivityDevice:function(callback)
+	findLongestActivityDevice:function(filePath,callback)
 	{
+		// stream the file from begining to end saving the first
+		// occurence of every device in an array. stream the file
+		// from end to begining saving the first occurence of every
+		// device. Subtract the start time and end time of every 
+		// device and return the device id with tha biggest diffrence
+		// which is the longest active time.
+
 		var devices = [];
 		var startTimes = [];
 		var endTimes = [];
@@ -152,8 +159,8 @@ var Worker = {
 		console.log("finding longest activity device...");
 		console.time("EXEC TIME (longest activity device)");
 		
-		var cat = spawn('cat',['obfuscated_data'])
-		var tac = spawn('tac',['obfuscated_data'])
+		var cat = spawn('cat',[filePath])
+		var tac = spawn('tac',[filePath])
 		
 		process(cat,startTimes,devices);
 		process(tac,endTimes);
