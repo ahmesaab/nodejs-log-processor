@@ -28,15 +28,13 @@ else
         worker.countFirstLaunches(options.input,options.product,
             function(firstTimeLaunches){
                 console.log(">> First Time Launches: " + firstTimeLaunches);
-            }
-        );
+        });
     }
 
     if(options.duplicates)
         worker.countDuplicates(options.input,function(duplicates){
                 console.log(">> Total Duplicate Events: " + duplicates);
-            }
-        );
+        });
 
     if(options.maintenance)
         worker.getBestMaintenanceTime(options.input,function(date){
