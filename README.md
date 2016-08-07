@@ -1,5 +1,21 @@
-
 Q1,2,6,7 can be found in the code on main.js
+
+USAGE: 
+
+	F-secure json log processor
+
+	  Processes JSON log file and answars questions 1,2,6,7. 
+
+	Options
+
+	  -i, --input file             The input file to process.                                              
+	  -p, --product product-name   Calculates the total and first-time launches of this product.           
+	  -d, --duplicates             Calculate number of duplicate events.                                   
+	  -m, --maintenance            Calculates the best time for maintenance.                               
+	  -l, --device                 Calculates the device id with the longest active time.                  
+	  -h, --help                   Print this usage guide. 
+
+
 
 Q3: Do you observe anything weird in timestamps?
 

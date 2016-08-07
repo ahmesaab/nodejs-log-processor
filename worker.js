@@ -1,7 +1,7 @@
 var readline = require('readline');
 var spawn = require('child_process').spawn;
 
-var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 
 var Worker = {
@@ -11,7 +11,7 @@ var Worker = {
     // of every device launch for this particular product. Count the lines.
     countFirstLaunches:function(filePath,product,callback)
     {
-        console.log("calculating first time launches...");
+        console.log("calculating first time launches of product...");
         console.time("EXEC TIME (first time launches)");
 
         var launches = 0;
@@ -39,12 +39,11 @@ var Worker = {
     // of every event_id thus filtering out duplicate events. Count the lines.
     //
     // NOTE: I have asumed that duplicates should not be included while 
-    // counting the launches. If a measure of the duplicate rate frequency is 
-    // required (Q3) we can apply awk "x[$0]++>=1" and count them.
+    // counting the launches. If this is not an issue skip the awk filter.
     countLanches:function(filePath,product,callback)
     {
         var launches = 0;
-        console.log("calculating total launches...");
+        console.log("calculating total launches of product...");
         console.time("EXEC TIME (total launches)");
 
         var jq = spawn('jq',['{event_id,type,source}| \
@@ -63,6 +62,31 @@ var Worker = {
         stream.on('close',function() {
             console.timeEnd("EXEC TIME (total launches)")
             callback(launches);    
+        });
+    },
+
+    // Spawn a jq proccess that will stream the event ids only and apply
+    // awk filter that counts the will outputs only the repeated ids.
+    countDuplicates:function(filePath,callback)
+    {
+        var duplicates = 0;
+        console.log("calculating total duplicates...");
+        console.time("EXEC TIME (total duplicates)");
+
+        var jq = spawn('jq',['{event_id}|tostring',filePath,'--raw-output']);
+
+        var awk = spawn("awk",["x[$0]++>=1"]);
+        jq.stdout.pipe(awk.stdin);
+
+        var stream = readline.createInterface({input : awk.stdout});
+
+        stream.on('line', function(line) {
+            duplicates++;
+        });
+
+        stream.on('close',function() {
+            console.timeEnd("EXEC TIME (total duplicates)")
+            callback(duplicates);    
         });
     },
 

@@ -11,35 +11,51 @@
 // Note: Q3,4,5 is answared in the README.md file.
 
 var worker = require('./worker.js');
+var commandLineHelper = require('./command-line-helper.js');
 
-var logFilePath = process.argv[2];
-var product = process.argv[3];
+var options = commandLineHelper.options;
 
-if(logFilePath && logFilePath!='-h')
+if(options.help || typeof options.input == 'undefined')
+    commandLineHelper.printHelp();
+else
 {
-    if(product)
+    if(options.product)
     {
-        worker.countLanches(logFilePath,product,function(launches){
-            console.log("Total Launches: "+ launches);
+        worker.countLanches(options.input,options.product,function(launches){
+                console.log(">> Total Launches: " + launches);
         });
 
-        worker.countFirstLaunches(logFilePath,product,function(firstTimeLaunches){
-            console.log("First Time Launches: "+ firstTimeLaunches);
-        });
+        worker.countFirstLaunches(options.input,options.product,
+            function(firstTimeLaunches){
+                console.log(">> First Time Launches: " + firstTimeLaunches);
+            }
+        );
     }
 
-    worker.getBestMaintenanceTime(logFilePath,function(date){
-        console.log("Best time to do maintenance is on a "+date.day+" at "+
-            date.hour+":00 with average load of "+ parseInt(date.mini/3)+" events");
-    });
+    if(options.duplicates)
+    {
+        worker.countDuplicates(options.input,function(duplicates){
+                console.log(">> Total Duplicate Events: " + duplicates);
+            }
+        );
+    }
 
-    worker.findLongestActivityDevice(logFilePath,function(data){
-        console.log("Longest Activity Device: "+data.device+
-            " with active time of "+data.time+" milliseconds");
-    });
+    if(options.maintenance)
+        worker.getBestMaintenanceTime(options.input,function(date){
+            console.log(">> Best time for maintenance is on a " + date.day +
+                " at "+date.hour+":00 with average load of " +
+                parseInt(date.mini/3) +" events");
+        });
+    
+    if(options.device)
+        worker.findLongestActivityDevice(options.input,function(data){
+            console.log(">> Longest Activity Device: " + data.device +
+                " with active time of " + data.time + " milliseconds");
+        });
 }
-else
-    console.log("usage: ./main.js 'path_to_log_file' ['product_name']");
+
+
+
 
 
 
