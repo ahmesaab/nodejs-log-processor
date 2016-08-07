@@ -33,12 +33,10 @@ else
     }
 
     if(options.duplicates)
-    {
         worker.countDuplicates(options.input,function(duplicates){
                 console.log(">> Total Duplicate Events: " + duplicates);
             }
         );
-    }
 
     if(options.maintenance)
         worker.getBestMaintenanceTime(options.input,function(date){
