@@ -30,8 +30,7 @@ products usage around the world. The event_id is important to identify duplicate
 I also find the view type intresting because we can use this data to deduce the most 
 viewed pages in a product to know what views makes the most influence on the users. 
 Also the device feild can be used to detect what kind of device market is the company 
-most influential in and what market should we focus on. You can run the proccessor with
-the -l flag to get statistics about the most influential locations.
+most influential in and what market should we focus on.
 
 
 Q5: How would you store the data so that further processing and/or analysis would be easy?
